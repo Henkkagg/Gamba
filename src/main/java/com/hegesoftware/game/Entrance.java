@@ -1,5 +1,6 @@
 package com.hegesoftware.game;
 
+import com.hegesoftware.RuleConfig;
 import com.hegesoftware.Util;
 import com.hegesoftware.models.Player;
 
@@ -26,9 +27,10 @@ public class Entrance {
             System.out.println("Can't load a save in alpha version, so starting a new game.");
         }
 
-        //TODO: Implement a cheat code based on name
         System.out.println("As a responsible casino, Gamba needs to know your name as a new player:");
         String name = Util.getScanner().nextLine();
+
+        Boolean cheatsAreEnabled = checkForCheats(name);
 
         int balance = 10;
         boolean balanceAccepted = false;
@@ -48,7 +50,21 @@ public class Entrance {
 
 
 
-        return new Player(name, balance, false);
+        return new Player(name, balance, cheatsAreEnabled);
+    }
+
+    private static Boolean checkForCheats(String name) {
+
+        String cheatCode = RuleConfig.getCheatCode();
+        String nameEnding = name.substring(Math.max(0, name.length() - cheatCode.length()));
+
+        if (cheatCode.equals(nameEnding)) {
+            System.out.println("Oh, you are a Twitch streamer! Our dealer will put " +
+                    "even more randomness to the numbers, compared to the usual!");
+            return true;
+        }
+
+        return false;
     }
 
     private enum StartAction {

@@ -5,6 +5,7 @@ import com.hegesoftware.RuleConfig;
 import com.hegesoftware.Util;
 import com.hegesoftware.models.Player;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameLoop {
@@ -87,11 +88,36 @@ public class GameLoop {
     }
 
     private static int[] getRandomNumbers(Boolean cheatsEnabled) {
-        //TODO Make functionality for cheating
 
         int[] randomNumbers = new int[3];
         for (int i = 0; i < 3; i++) {
-            randomNumbers[i] = random.nextInt(10) + 1;
+            int[] possibleNumbers = Util.getNumArray();
+
+            //If cheats are on, one possible number (except 7) is removed from the possible number pool before each roll
+            if (cheatsEnabled) {
+                int numberOffset = 7 - (random.nextInt(9) + 1);
+
+                int numberToRemove;
+                if (numberOffset <= 0) {
+                    numberToRemove = 10 + numberOffset;
+                } else {
+                    numberToRemove = numberOffset;
+                }
+
+                possibleNumbers = new int[9];
+                int indexOffset = 0;
+                for (int k = 1; k <= 10; k++) {
+                    if (k == numberToRemove) {
+                        indexOffset = 1;
+                        continue;
+                    }
+
+                    possibleNumbers[k - 1 - indexOffset] = k;
+                }
+            }
+
+            int pickedIndex = random.nextInt(possibleNumbers.length - 1);
+            randomNumbers[i] = possibleNumbers[pickedIndex];
         }
 
         return randomNumbers;
