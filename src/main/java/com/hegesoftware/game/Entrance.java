@@ -2,6 +2,7 @@ package com.hegesoftware.game;
 
 import com.hegesoftware.RuleConfig;
 import com.hegesoftware.Util;
+import com.hegesoftware.data.Persistence;
 import com.hegesoftware.models.Player;
 
 public class Entrance {
@@ -18,13 +19,19 @@ public class Entrance {
             String input = Util.getScanner().nextLine();
             input = input.toUpperCase();
 
-            if (input.equals("Y")) startAction = StartAction.StartingNew;
-            if (input.equals("N")) startAction = StartAction.Loading;
+            if (input.equals("N")) startAction = StartAction.StartingNew;
+            if (input.equals("Y")) startAction = StartAction.Loading;
         }
 
         //TODO: Actually load a previous previous save
-        if (startAction == StartAction.StartingNew) {
-            System.out.println("Can't load a save in alpha version, so starting a new game.");
+        if (startAction == StartAction.Loading) {
+            Player player = Persistence.loadGame();
+
+            if (player != null) {
+                return player;
+            }
+
+            System.out.println("Error: Couldn't load the game. Starting a new one.");
         }
 
         System.out.println("As a responsible casino, Gamba needs to know your name as a new player:");
