@@ -31,7 +31,7 @@ public class Entrance {
                 return player;
             }
 
-            System.out.println("Error: Couldn't load the game. Starting a new one.");
+            System.out.println("Couldn't load the game. Starting a new one.");
         }
 
         System.out.println("As a responsible casino, Gamba needs to know your name as a new player:");
